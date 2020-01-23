@@ -80,6 +80,14 @@ public class Hacker : MonoBehaviour
         bool isValidLevel = (input == "1" || input == "2" || input == "3");
         switch (input)
         {
+            case "quit":
+            case "exit":
+            case "Exit":
+            case "Quit":
+                
+                Terminal.WriteLine("safe quit, close browser tab");
+                Application.Quit();
+                break;
             case "General Kenobi":
                 Terminal.WriteLine("I've been expecting you");
                 break;
