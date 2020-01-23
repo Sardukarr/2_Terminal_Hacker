@@ -50,31 +50,38 @@ public class Hacker : MonoBehaviour
     private void CheckPassowrd(string input)
     {
         if (input == CorrectPassword)
-            Terminal.WriteLine("sucess, you are in.");
+        {
+            DispayWinScreen();
+        }
         else if (retries > 0)
-        { 
+        {
             Terminal.WriteLine("wrong password, try again:");
             retries--;
         }
-        else 
-           Terminal.WriteLine("wrong password, calling security");
+        else
+        { 
+            Terminal.WriteLine("wrong password, calling security");
+            Terminal.WriteLine("Run! type 'menu':");
+            currentScreen = Screen.MainMenu;
+        }
     }
+    void DispayWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+        currentScreen = Screen.MainMenu;
+    }
+
+
 
     void RunMainMenu(string input)
     {
+        bool isValidLevel = (input == "1" || input == "2" || input == "3");
         switch (input)
         {
-            case "1":
-                level = 1;
-                StartGame();
-                break;
-            case "2":
-                level = 2;
-                StartGame();
-                break;
-            case "3":
-                level = 3;
-                StartGame();
+            case "General Kenobi":
+                Terminal.WriteLine("I've been expecting you");
                 break;
             case "menu":
             case "Menu":
@@ -82,7 +89,16 @@ public class Hacker : MonoBehaviour
                 ShowMainMenu();
                 break;
             default:
-                Terminal.WriteLine("Invalid input, repeat:");
+                if (isValidLevel)
+                {
+                    level = int.Parse(input);
+                    StartGame();
+                }
+                else
+                { 
+                    Terminal.WriteLine("Invalid input, repeat:");
+                    Debug.Log("wrong level");
+                }
                 break;
         }
     }
@@ -91,15 +107,17 @@ public class Hacker : MonoBehaviour
         switch (level)
         {
             case 1:
-                CorrectPassword=Easy[UnityEngine.Random.Range(0, 5)];
+                CorrectPassword=Easy[UnityEngine.Random.Range(0, Easy.Length)];
+
                 break;
             case 2:
-                CorrectPassword = Medium[UnityEngine.Random.Range(0, 5)];
+                CorrectPassword = Medium[UnityEngine.Random.Range(0, Medium.Length)];
                 break;
             case 3:
-                CorrectPassword = Hard[UnityEngine.Random.Range(0, 5)];
+                CorrectPassword = Hard[UnityEngine.Random.Range(0, Hard.Length)];
                 break;
         }
+        Debug.Log(CorrectPassword);
     }
     private void StartGame()
     {
@@ -107,12 +125,67 @@ public class Hacker : MonoBehaviour
         RandomizePassword();
         Terminal.ClearScreen();
         Terminal.WriteLine("You have choosen level " + level);
-        Terminal.WriteLine("enter you password: ");
+        Terminal.WriteLine("enter you password, hint: " + CorrectPassword.Anagram());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void ShowLevelReward()
+    {
+        Terminal.WriteLine("Succes, You're in.");
+        switch (level)
+        {
+            case 1:
+                Terminal.WriteLine(@"
+       ___________
+      |.---------.|
+      || you're  ||
+      ||         ||
+      || IN!     ||
+      |'---------'|
+       `)__ ____('
+       [=== -- o ]--.
+     __'---------'__ \
+    [::::::::::: :::] )
+     `''''''''''''''`/T\
+                     \_/");
+                break;
+            case 2:
+                Terminal.WriteLine(@"
+               _A
+             .'`'`'.
+            /   , , \ 
+           |   <\^/> |
+           |  < (_) >|
+           /   ====  \
+          (.--._ _.--.)
+           |\  -`\- /|
+           |(_- > -.)|
+           \__- '^'._ /
+            |\   .  /
+         _.'\ '----'|' -.
+     _.- '  O ;-.__.' \O `o.
+     / o \      \/ -.-\/|   \
+    |    ;,     '.|\| /
+hold on right there!");
+                break;
+            case 3:
+                Terminal.WriteLine(@"
+       .-""""-.        .-""""-.
+     /_        _\    /_        _\
+    // \      / \\  // \      / \\
+    |\__\    /__/|  |\__\    /__/|
+     \    ||    /    \    ||    /
+      \        /      \        /
+       \  __  /        \  __  / 
+        '.__.'          '.__.'
+         |  |            |  | 
+you are coming with us");
+                break;
+        }
     }
 }
